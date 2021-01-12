@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"> <meta name="viewport" content="width=device-width">
+    <title>index</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/androidstudio.min.css">
+    <!-- this is highlight.js -->
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    <div class='container'>
+      <h1>击中集问题的几种近似算法</h1>
+
+<h2>击中集问题</h2>
+
+<p>假设一个有限集合\(A = {e_{i}}\), 设一个集群\(T, s.t. \forall x \in T, x \subset A\).</p>
+
+<p>求一个最小的\(A\)的子集\(I\), 使得\(I \bigcap T_{i} \neq \Phi\)</p>
+
+<p>可以发现这个问题跟集合覆盖问题十分相似.</p>
+
+<p>从直觉上看, 这个问题似乎是集合覆盖问题的反问题.</p>
+
+<h2>简单的贪心算法</h2>
+
+<p>按照某个顺序直接贪.</p>
+
+<p>近似度很容易被卡到n(</p>
+
+<p>按照从贡献大小递减直接贪</p>
+
+<p>近似度分析不出来...</p>
+
+<h2>线性规划算法</h2>
+
+<p>既然用了线性规划了, 直接加权好了(</p>
+
+<p>先定义整数规划形式</p>
+
+<p>定义权函数\(W: A \rightarrow R\)</p>
+
+<p>最小化\(\sum_{i \leq  |A|}w(x_i)x_{i}\)</p>
+
+<p>约束条件为\( \sum_{i \in T_{j}}x_{i}\geq 1\)</p>
+
+<p>\(x_{i} \in \{0,1\}\)</p>
+
+<p>再将变量松弛为\(x \in [0, \infin]\)</p>
+
+<p>取整的时候根据套路, 设\(k\)表示集群\(T\)中最大的元素大小.</p>
+
+<p>若\(x_{i} \geq \frac{1}{k}\), 则将\(x_i\)选掉.</p>
+
+<p>显然这样可以满足原问题的每个约束.</p>
+
+<p>下面来分析整个过程的近似度.</p>
+
+<p>和集合覆盖一个套路.</p>
+
+<p>\(k\sum w(x_i)x_i \geq \sum(w_{i})\)</p>
+
+<p>于是近似度为\(k\)</p>
+
+<h2>原始对偶算法</h2>
+
+    </div>
+    <script>
+      hljs.initHighlightingOnLoad()
+    </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.5.0/highlightjs-line-numbers.min.js"></script>
+  <script>
+      hljs.initHighlightingOnLoad();
+      hljs.initLineNumbersOnLoad();
+  </script>
+  </body>
+</html>
