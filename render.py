@@ -1,5 +1,6 @@
 import os
 import subprocess
+import io
 
 
 def copy_file(raw_path: str, target_path: str):
@@ -11,53 +12,132 @@ def copy_file(raw_path: str, target_path: str):
     target_file.close()
 
 
+def load_file(path: str) -> str:
+    F = open(path, 'r', encoding='utf-8')
+    ret = F.read()
+    return ret
+
+
+def render_markdown_content(content: str) -> str:
+    ret = subprocess.Popen(
+        args=['hoedown', '--all-block', '--all-span', '--all-flags'],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        encoding='utf-8'
+    )
+    ret.stdin.write(content)
+    ret.stdin.close()
+    string_lines = ret.stdout.readlines()
+    out = ''
+    for i in string_lines:
+        out += i
+    return out
+
+
 class Render:
-    def __init__(self, markdown_location: str, html_location: str, web_template_location: str):
+    def __init__(self, markdown_location: str,
+                 html_location: str,
+                 web_template_location: str,
+                 blog_template_location: str,
+                 card_template_location: str,
+                 web_name: str):
         self.markdown_location = markdown_location
         self.html_location = html_location
         self.web_template_location = web_template_location
+        self.blog_template_location = blog_template_location
+        self.card_template_location = card_template_location
+        self.blog_list = []
 
         if not os.path.exists(html_location):
             os.makedirs(html_location)
 
-        F = open(self.web_template_location, encoding='utf-8')
-        self.web_template = F.read()
-        F.close()
+        # 加载模板
+        self.web_template = load_file(self.web_template_location)
+        self.blog_template = load_file(self.blog_template_location)
+        self.card_template = load_file(self.card_template_location)
 
+        # 加载占位符
         self.web_title_cattle = '<!-- title -->'
         self.web_content_cattle = '<!-- <content> -->'
+        self.blog_content_cattle = '<!-- <content> -->'
 
-    def render_html_content(self, title: str, content: str) -> str:
+        self.card_title_cattle = '<!-- title -->'
+        self.card_content_cattle = '<!-- content -->'
+        self.card_date_cattle = '<!-- date -->'
+        self.card_href_cattle = '<!-- href -->'
+
+        self.web_abstract_cattle = '<!-- more -->'
+        self.web_name_cattle = '<!-- web-name -->'
+
+        self.nav_home_cattle = '<!-- nav-home-href -->'
+        self.nav_blog_cattle = '<!-- nav-blog-href -->'
+        self.nav_about_cattle = '<!-- nav-about-href -->'
+
+        self.web_template = self.web_template.replace(self.web_name_cattle, web_name)
+        self.blog_template = self.blog_template.replace(self.web_name_cattle, web_name)
+
+    def render_html_content(self, title: str, content: str, depth: int) -> str:
         ret = self.web_template.replace(self.web_title_cattle, title, 1)
         ret = ret.replace(self.web_content_cattle, content, 1)
+        partial_str = './'
+        for i in range(depth):
+            partial_str += '../'
+        ret = ret.replace(self.nav_home_cattle, partial_str + 'index.html')
+        ret = ret.replace(self.nav_blog_cattle, partial_str + 'blog.html')
+        ret = ret.replace(self.nav_about_cattle, partial_str + 'about.html')
         return ret
 
-    def render_markdown_html(self, markdown_path: str, html_path: str, title: str):
-        f = open(markdown_path, 'r', encoding='utf-8')
-        ret = subprocess.run(
-            args=['hoedown', '--all-block', '--all-span', '--all-flags'],
-            stdin=f,
-            stdout=subprocess.PIPE,
-            encoding='utf-8'
-        )
-        f.close()
-        out_string = ret.stdout
+    def render_abstract(self, markdown_path: str) -> str:
+        out_string = self.load_abstract_of_file(markdown_path)
+        return render_markdown_content(out_string)
+
+    def render_html(self, markdown_path: str, html_path: str, title: str, depth: int):
+        out_string = render_markdown_content(self.load_without_abstract_of_file(markdown_path))
         f_out = open(html_path, 'w', encoding='utf-8')
-        f_out.write(self.render_html_content(title, out_string))
+        f_out.write(self.render_html_content(title, out_string, depth))
         f_out.close()
+
         print('finish render ' + markdown_path + ' to ' + html_path)
 
-    def build_one_layer(self, markdown_path_layer: str, html_path_layer: str):
+    def load_abstract_of_file(self, path: str) -> str:
+        file_content = load_file(path)
+        abstract_cattle_location = file_content.find(self.web_abstract_cattle)
+        if abstract_cattle_location == -1:
+            return ''
+        else:
+            return file_content[:abstract_cattle_location]
+
+    def load_without_abstract_of_file(self, path: str) -> str:
+        file_content = load_file(path)
+        abstract_cattle_location = file_content.find(self.web_abstract_cattle)
+        if abstract_cattle_location == -1:
+            return file_content
+        else:
+            return file_content[abstract_cattle_location + len(self.web_abstract_cattle):]
+
+    def build_one_layer(self, markdown_path_layer: str,
+                        html_path_layer: str,
+                        partial_location: str,
+                        depth: int,
+                        date: str):
         if not os.path.exists(html_path_layer):
             os.makedirs(html_path_layer)
         dir_list = os.listdir(markdown_path_layer)
 
         # 处理markdown文件
         file_list = [i for i in dir_list if os.path.isfile(markdown_path_layer + '/' + i) and i.endswith(".md")]
+
         for i in file_list:
             cur_markdown_filename = markdown_path_layer + '/' + i
             cur_html_filename = html_path_layer + '/' + i.replace('.md', '.html')
-            self.render_markdown_html(cur_markdown_filename, cur_html_filename, i.replace('.md', ''))
+            self.render_html(cur_markdown_filename, cur_html_filename, i.replace('.md', ''), depth)
+            if depth != 0:
+                self.blog_list.append({
+                    'title': i.replace('.md', ''),
+                    'path': partial_location + '/' + i.replace('.md', '.html'),
+                    'date': date,
+                    'abstract': self.render_abstract(cur_markdown_filename)
+                })
 
         # 处理其他文件 比如音乐或是视频
         file_list = [i for i in dir_list if os.path.isfile(markdown_path_layer + '/' + i) and (not i.endswith(".md"))]
@@ -66,14 +146,57 @@ class Render:
             cur_html_filename = html_path_layer + '/' + i
             copy_file(cur_raw_filename, cur_html_filename)
 
-    def build_next_layer(self, markdown_path_layer: str, html_path_layer: str):
-        self.build_one_layer(markdown_path_layer, html_path_layer)
+    def build_next_layer(self, markdown_path_layer: str,
+                         html_path_layer: str,
+                         partial_location: str,
+                         depth: int,
+                         date: str):
+        self.build_one_layer(markdown_path_layer, html_path_layer, partial_location, depth, date)
         dir_list = os.listdir(markdown_path_layer)
         dir_list = [i for i in dir_list if os.path.isdir(markdown_path_layer + '/' + i)]
         for i in dir_list:
             cur_markdown_layer_name = markdown_path_layer + '/' + i
             cur_html_layer_name = html_path_layer + '/' + i
-            self.build_next_layer(cur_markdown_layer_name, cur_html_layer_name)
+            cur_data = date
+            if 1 == depth:
+                cur_data = i
+            if 1 < depth <= 3:
+                cur_data += '.' + i
+            self.build_next_layer(cur_markdown_layer_name,
+                                  cur_html_layer_name,
+                                  partial_location + '/' + i,
+                                  depth + 1,
+                                  cur_data)
+
+    def render_card(self) -> str:
+        content = ''
+        for x in self.blog_list:
+            name = x['title']
+            path = x['path']
+            date = x['date']
+            abstract = x['abstract']
+            if abstract == '':
+                abstract = '阿巴阿巴, 这篇文章没写简介'
+
+            partial_content = self.card_template.replace(self.card_title_cattle, name)
+
+            partial_content = partial_content.replace(self.card_content_cattle, abstract)
+            partial_content = partial_content.replace(self.card_date_cattle, date)
+            partial_content = partial_content.replace(self.card_href_cattle, path)
+            content += partial_content
+            content += '\n'
+        content = self.blog_template.replace(self.blog_content_cattle, content)
+        content = content.replace(self.nav_home_cattle, './index.html')
+        content = content.replace(self.nav_blog_cattle, './blog.html')
+        content = content.replace(self.nav_about_cattle, './about.html')
+        return content
+
+    def build_blog_path(self):
+        blog_file = open(self.html_location + '/blog.html', 'w', encoding='utf-8')
+        blog_file.write(self.render_card())
 
     def build(self):
-        self.build_next_layer(self.markdown_location, self.html_location)
+        # copy_file('./blog_template_css.css', self.html_location + '/blog_template_css.css')
+        # copy_file('./web_template_css.css', self.html_location + '/web_template_css.css')
+        self.build_next_layer(self.markdown_location, self.html_location, './', 0, '')
+        self.build_blog_path()

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8"> <meta name="viewport" content="width=device-width">
-    <title><!-- title --></title>
+    <title>机器学习基础大作业进程~更新中</title>
     <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet"
@@ -34,20 +34,20 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><!-- web-name --></a>
+        <a class="navbar-brand" href="#">kvrmnks</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="<!-- nav-home-href -->" target="_self">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="./../../../../../index.html" target="_self">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="<!-- nav-blog-href -->">Blog</a>
+              <a class="nav-link" href="./../../../../../blog.html">Blog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="<!-- nav-about-href -->">About</a>
+              <a class="nav-link" href="./../../../../../about.html">About</a>
             </li>
           </ul>
         </div>
@@ -56,7 +56,31 @@
 
 
     <div class='container'>
-      <!-- <content> -->
+      <h3>简介</h3>
+
+<p>机器学习基础课为什么要安排一个深度学习的作业？</p>
+
+<h3><del>大事</del>记录</h3>
+
+<h4>20200728之前</h4>
+
+<ul>
+<li>把Anaconda的环境搭建好了，一定记住安装一些类似于pyTorch的模块时一定要去官网找到正确的姿势。</li>
+<li>还用了Anaconda的虚拟环境，除了有点占用硬盘以外，都挺好的。
+<img src="file://C:/Users/Kvrmnks/Documents/Gridea/post-images/1595920396482.jpg" alt="不也挺好吗？"></li>
+<li>简单的试了试把环境搭好，读了读数据集和测试集，试了试LeNet，发现好像可以识别1000种汉字？不过还没进行泛化实验
+#### 20200728</li>
+<li>尝试把测试集的格式直接存成numpy。
+存个啥，发现了正确的读数据的方式，比原来一个一个像素读快到不知道哪里去了
+<code>python
+content = file.read(height*width)
+img = np.frombuffer(content, dtype=np.uint8).reshape(height,width)</code>
+注意从byte 转 numpy 要用 np.formbuffer()</li>
+<li>尝试进行图片大小的robust，计划直接按比例缩放，之前用的pyTorch自带的AdaptAvePool
+用PIL的库写好了</li>
+<li>跑了跑LeNet 全集</li>
+</ul>
+
 
     </div>
     <script>

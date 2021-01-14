@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8"> <meta name="viewport" content="width=device-width">
-    <title><!-- title --></title>
+    <title>ubuntu 上的 mysql + pymysql + screen</title>
     <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet"
@@ -34,20 +34,20 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><!-- web-name --></a>
+        <a class="navbar-brand" href="#">kvrmnks</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="<!-- nav-home-href -->" target="_self">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="./../../../../../index.html" target="_self">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="<!-- nav-blog-href -->">Blog</a>
+              <a class="nav-link" href="./../../../../../blog.html">Blog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="<!-- nav-about-href -->">About</a>
+              <a class="nav-link" href="./../../../../../about.html">About</a>
             </li>
           </ul>
         </div>
@@ -56,7 +56,34 @@
 
 
     <div class='container'>
-      <!-- <content> -->
+      <p>安装mysql
+<code>apt install mysql-server
+apt install mysql-client</code>
+然后先看 mysql 的版本, 一定要注意版本
+不同版本的 mysql 改密码的方式是不同的
+比如 mysql8.0 的情况下
+<code>use mysql;
+ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;你的新密码&#39;</code>
+退出即可</p>
+
+<p>当然可能不知道一开始的密码
+<code>vim /etc/mysql/debian.cnf</code>
+<code>screen -S 名字</code></p>
+
+<pre><code>ctrl+a     d 离开当前
+</code></pre>
+
+<pre><code>screen -r 名字恢复
+</code></pre>
+
+<pre><code>Debian平台的my.cnf
+在/etc/mysql/mysql.conf.d/mysqld.cnf
+</code></pre>
+
+<pre><code>wait_timeout=31536000
+interactive_timeout=31536000
+</code></pre>
+
 
     </div>
     <script>

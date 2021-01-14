@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8"> <meta name="viewport" content="width=device-width">
-    <title><!-- title --></title>
+    <title>pytorch中都该保存些什么东西</title>
     <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet"
@@ -34,20 +34,20 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><!-- web-name --></a>
+        <a class="navbar-brand" href="#">kvrmnks</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="<!-- nav-home-href -->" target="_self">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="./../../../../../index.html" target="_self">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="<!-- nav-blog-href -->">Blog</a>
+              <a class="nav-link" href="./../../../../../blog.html">Blog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="<!-- nav-about-href -->">About</a>
+              <a class="nav-link" href="./../../../../../about.html">About</a>
             </li>
           </ul>
         </div>
@@ -56,7 +56,68 @@
 
 
     <div class='container'>
-      <!-- <content> -->
+      <h3>Pytorch在训练时都该保存些什么东西</h3>
+
+<p>由于什么网络故障，时间限制，经常会从训练过程中中断，保存一些必要的信息可以使得继续训练得以实现。</p>
+
+<p>废话少说，需要保存的东西为</p>
+
+<ol>
+<li><p>模型参数</p></li>
+<li><p>随机事件种子</p></li>
+<li><p>优化器</p></li>
+<li><p>lr_scheduler</p></li>
+</ol>
+
+<p>最后一种是可选择的，第二种其实也算是可选择的，如果不考虑可重现性的话（</p>
+
+<p>类似的有些优化器只需要保存一下learning rate 就好，但是对于Adam这种类型其中优化参数可能随着训练过程发生变化的复杂优化器就有必要把里面的参数全都保存一下。</p>
+
+<p>对于第二条可以挑一个自己喜欢的模数，最好是质数</p>
+
+<pre><code class="language-python">seed = 998244353
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)  
+np.random.seed(seed)  # Numpy module.
+random.seed(seed)  # Python random module.
+torch.manual_seed(seed)
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
+</code></pre>
+
+<p>对于第一条第三条来说，可以利用Pytorch自带的序列化方法进行保存</p>
+
+<pre><code class="language-python">def set_checkpoint(checkpoint_name, model, optimizer):
+    torch.save({
+        &#39;model&#39;: model.state_dict(),
+        &#39;optimizer&#39;: optimizer.state_dict()
+    }, checkpoint_name);
+</code></pre>
+
+<p>加载的时候也很方便</p>
+
+<pre><code class="language-python">def load_checkpoint(checkpoint_name, model, optimzer):
+    _dict = torch.load(checkpoint_name)
+    model.load_state_dict(_dict[&#39;model&#39;])
+    optimizer.load_state_dict(_dict[&#39;optimizer&#39;])
+
+</code></pre>
+
+<p>具体调用过程</p>
+
+<pre><code class="language-python"># 保存阶段
+net = Net()
+optimizer = torch.optic.................
+set_checkpoint(&#39;你想要的的位置&#39;, net, optimzer)
+</code></pre>
+
+<pre><code class="language-python"># 加载阶段
+net = Net()
+optimizer = torch.optic.................
+load_checkpoint(&#39;你要的位置&#39;, net, optimizer);
+</code></pre>
+
 
     </div>
     <script>

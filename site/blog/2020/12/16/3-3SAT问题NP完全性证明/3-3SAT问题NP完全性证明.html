@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8"> <meta name="viewport" content="width=device-width">
-    <title><!-- title --></title>
+    <title>3-3SAT问题NP完全性证明</title>
     <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet"
@@ -34,20 +34,20 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><!-- web-name --></a>
+        <a class="navbar-brand" href="#">kvrmnks</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="<!-- nav-home-href -->" target="_self">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="./../../../../../index.html" target="_self">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="<!-- nav-blog-href -->">Blog</a>
+              <a class="nav-link" href="./../../../../../blog.html">Blog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="<!-- nav-about-href -->">About</a>
+              <a class="nav-link" href="./../../../../../about.html">About</a>
             </li>
           </ul>
         </div>
@@ -56,7 +56,46 @@
 
 
     <div class='container'>
-      <!-- <content> -->
+      <h2>3-3SAT问题NP-Complete性质的证明</h2>
+
+<h3>3-3SAT问题</h3>
+
+<p>首先来说明一下这个记号，第一个\(3\)表示每个变量最多出现在\(3\)个子句中, 特别的，认为\(\overline{x}\)与\(x\)是一个变量，第二个\(3\)表示每个子句中最多出现3个变量。注意这里是最多，即有可能出现2个变量，或者一个变量。</p>
+
+<p>值得讨论的事，如果每个子句中都确定性地存在3个变量，这个问题将脱离\(NP-Complete\)类，变成一个\(P\)问题.</p>
+
+<h3>从3SAT问题归约至3-3SAT问题</h3>
+
+<p>首先我们知道，要想实现这个归约，要解决的关键在于如何缩减一个变量的出现次数。</p>
+
+<p>显然我们可以通过添加新的析取子句来达到这个目的。</p>
+
+<p>可以通过真值表直接构造</p>
+
+<p>|a|b|a *b|
+|-|-|-|
+|1|1|1|
+|0|0|1|
+|1|0|0|
+|0|1|0|</p>
+
+<p>以上就是要构造的子句
+可以直接来化简一下
+\[(a\bigcap b) \bigcup (\overline{a}\bigcap \overline{b})\]
+化简得到
+\[(b\bigcup \overline{a})\bigcap (a \bigcup \overline{b})\]</p>
+
+<p>发现可以直接拆成两项
+\[(b \bigcup \overline{a})\quad (a \bigcup \overline{b})\]</p>
+
+<p>构造这两项的意义便是，如果存在这两个等式，那么a,b的值一定是相等的。</p>
+
+<p>于是考虑在3SAT问题中出现的一系列出现\(x\)的表达式</p>
+
+<p>一定可以通过这种方式将\(x\)拆成不同的变量，使得满足或不满足，可以发现一共只需要\(n^2\)级的代价。</p>
+
+<p>证完了~</p>
+
 
     </div>
     <script>
