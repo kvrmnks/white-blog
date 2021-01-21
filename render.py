@@ -1,6 +1,5 @@
 import os
 import subprocess
-import io
 
 
 def copy_file(raw_path: str, target_path: str):
@@ -18,7 +17,7 @@ def load_file(path: str) -> str:
     return ret
 
 
-def render_markdown_content(content: str) -> str:
+def render_markdown(content: str) -> str:
     ret = subprocess.Popen(
         args=['hoedown', '--all-block', '--all-span', '--all-flags'],
         stdin=subprocess.PIPE,
@@ -73,10 +72,13 @@ class Render:
         self.nav_blog_cattle = '<!-- nav-blog-href -->'
         self.nav_about_cattle = '<!-- nav-about-href -->'
 
+        self.global_css = '<!-- global-css -->'
+        self.global_js = '<!-- global-js -->'
+
         self.web_template = self.web_template.replace(self.web_name_cattle, web_name)
         self.blog_template = self.blog_template.replace(self.web_name_cattle, web_name)
 
-    def render_html_content(self, title: str, content: str, depth: int) -> str:
+    def render_web_page(self, title: str, content: str, depth: int) -> str:
         ret = self.web_template.replace(self.web_title_cattle, title, 1)
         ret = ret.replace(self.web_content_cattle, content, 1)
         partial_str = './'
@@ -85,21 +87,25 @@ class Render:
         ret = ret.replace(self.nav_home_cattle, partial_str + 'index.html')
         ret = ret.replace(self.nav_blog_cattle, partial_str + 'blog.html')
         ret = ret.replace(self.nav_about_cattle, partial_str + 'about.html')
+        ret = ret.replace(self.global_css, partial_str + 'global.css')
+        ret = ret.replace(self.global_js, partial_str + 'global.js')
         return ret
 
     def render_abstract(self, markdown_path: str) -> str:
+        # markdown_path 渲染的文件
+        # 渲染一篇博客的摘要部分
         out_string = self.load_abstract_of_file(markdown_path)
-        return render_markdown_content(out_string)
+        return render_markdown(out_string)
 
-    def render_html(self, markdown_path: str, html_path: str, title: str, depth: int):
-        out_string = render_markdown_content(self.load_without_abstract_of_file(markdown_path))
+    def interpret_web_page(self, markdown_path: str, html_path: str, title: str, depth: int):
+        out_string = render_markdown(self.load_without_abstract_of_file(markdown_path))
         f_out = open(html_path, 'w', encoding='utf-8')
-        f_out.write(self.render_html_content(title, out_string, depth))
+        f_out.write(self.render_web_page(title, out_string, depth))
         f_out.close()
-
         print('finish render ' + markdown_path + ' to ' + html_path)
 
     def load_abstract_of_file(self, path: str) -> str:
+        # 加载文件的摘要部分
         file_content = load_file(path)
         abstract_cattle_location = file_content.find(self.web_abstract_cattle)
         if abstract_cattle_location == -1:
@@ -108,6 +114,7 @@ class Render:
             return file_content[:abstract_cattle_location]
 
     def load_without_abstract_of_file(self, path: str) -> str:
+        # 加载除去<!-- more -->的部分
         file_content = load_file(path)
         abstract_cattle_location = file_content.find(self.web_abstract_cattle)
         if abstract_cattle_location == -1:
@@ -120,6 +127,13 @@ class Render:
                         partial_location: str,
                         depth: int,
                         date: str):
+
+        # markdown_path_layer 正在解析的地址
+        # html_path_layer 正在生成的地址
+        # partial_location 相对位置
+        # depth 相对位置中的层数
+        # date 用于生成blog的时间
+
         if not os.path.exists(html_path_layer):
             os.makedirs(html_path_layer)
         dir_list = os.listdir(markdown_path_layer)
@@ -130,7 +144,7 @@ class Render:
         for i in file_list:
             cur_markdown_filename = markdown_path_layer + '/' + i
             cur_html_filename = html_path_layer + '/' + i.replace('.md', '.html')
-            self.render_html(cur_markdown_filename, cur_html_filename, i.replace('.md', ''), depth)
+            self.interpret_web_page(cur_markdown_filename, cur_html_filename, i.replace('.md', ''), depth)
             if depth != 0:
                 self.blog_list.append({
                     'title': i.replace('.md', ''),
@@ -151,6 +165,11 @@ class Render:
                          partial_location: str,
                          depth: int,
                          date: str):
+        # markdown_path_layer 正在解析的地址
+        # html_path_layer 正在生成的地址
+        # partial_location 相对位置
+        # depth 相对位置中的层数
+        # date 用于生成blog的时间
         self.build_one_layer(markdown_path_layer, html_path_layer, partial_location, depth, date)
         dir_list = os.listdir(markdown_path_layer)
         dir_list = [i for i in dir_list if os.path.isdir(markdown_path_layer + '/' + i)]
@@ -169,6 +188,7 @@ class Render:
                                   cur_data)
 
     def render_card(self) -> str:
+        # 生成关于卡片的html
         content = ''
         for x in self.blog_list:
             name = x['title']
@@ -189,14 +209,22 @@ class Render:
         content = content.replace(self.nav_home_cattle, './index.html')
         content = content.replace(self.nav_blog_cattle, './blog.html')
         content = content.replace(self.nav_about_cattle, './about.html')
+        content = content.replace(self.global_js, './global.js')
+        content = content.replace(self.global_css, './global.css')
         return content
 
-    def build_blog_path(self):
+    def interpret_blog_page(self):
+        # 由于需要每个blog的具体地址，需要先构建文件再构造链接
+        # 生成blog界面的各个链接
         blog_file = open(self.html_location + '/blog.html', 'w', encoding='utf-8')
         blog_file.write(self.render_card())
+        blog_file.close()
+
+    def build_js_and_css(self):
+        copy_file('./global.js', self.html_location + '/global.js')
+        copy_file('./global.css', self.html_location + '/global.css')
 
     def build(self):
-        # copy_file('./blog_template_css.css', self.html_location + '/blog_template_css.css')
-        # copy_file('./web_template_css.css', self.html_location + '/web_template_css.css')
+        self.build_js_and_css()
         self.build_next_layer(self.markdown_location, self.html_location, './', 0, '')
-        self.build_blog_path()
+        self.interpret_blog_page()

@@ -24,6 +24,8 @@
 
 具体格式在项目的docs_test中有演示
 
+2021.1.14 版本演示
+
 另附[demo](https://kvrmnks.gitee.io/web_test//index.html)
 
 对照[mkdocs生成的](https://kvrmnks.github.io/)
@@ -33,6 +35,7 @@
 
 2021.1.14 实现目录的解析，以及摘要的markdown化
 
+2021.1.21 调整了一下图片的表示方式
 #### todo
 1. blog目录的自动生成与摘要的自动生成 	
-2. 加个比较友好图片查看方式，比如zoom.js
+2. 加个比较友好图片查看方式，比如zoom.js 完成√

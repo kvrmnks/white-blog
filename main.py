@@ -1,8 +1,8 @@
 import render
 
 if __name__ == '__main__':
-    r = render.Render('F:\projectSet\white-blog\docs_test',
-                      'F:\projectSet\white-blog\site',
+    r = render.Render(r'F:\projectSet\white-blog\docs_test',
+                      r'F:\projectSet\white-blog\site',
                       'web_template.html',
                       'blog_template.html',
                       'card_template.html',

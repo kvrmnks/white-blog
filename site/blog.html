@@ -12,7 +12,8 @@
     <!-- this is highlight.js -->
     <link rel="stylesheet"
           href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/androidstudio.min.css">
-
+    <link rel="stylesheet"
+          href="./global.css">
 <!--    <link rel="stylesheet" href="/web_template_css.css">-->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async
@@ -305,6 +306,20 @@
 
         </div>
     </div>
+
+        <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- The Close Button -->
+      <span class="close">&times;</span>
+
+      <!-- Modal Content (The Image) -->
+      <img class="modal-content" id="img01">
+
+      <!-- Modal Caption (Image Text) -->
+      <div id="caption"></div>
+    </div>
+
     <script>
       hljs.initHighlightingOnLoad()
     </script>
@@ -313,5 +328,6 @@
       hljs.initHighlightingOnLoad();
       hljs.initLineNumbersOnLoad();
   </script>
+    <script src="./global.js"></script>
   </body>
 </html>
