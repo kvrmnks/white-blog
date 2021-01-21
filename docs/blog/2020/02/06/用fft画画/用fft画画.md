@@ -8,7 +8,7 @@
 
 ~~顺便预习一下马上要学的QT~~
 
-### **fft**
+### fft
 
 既然要用fft画画当然要会fft的呀,什么你还不会fft?
 
@@ -21,70 +21,41 @@
 这里丢个一直在用的fft板子  
 
 复数类板子  
+
+
 ``` cpp
 
 class Complex{
-
 private:
-
     qreal a,b;
-
 public:
-
     Complex(qreal a=0,qreal b=0):a(a),b(b){}
-
     Complex operator * (qreal x)const;
-
     Complex operator * (const Complex &y)const;
-
     Complex operator + (const Complex &y)const;
-
     Complex operator - (const Complex &y)const;
-
     qreal length()const{
-
         return sqrt(a*a+b*b);
-
     }
-
     qreal real()const{return a;}
-
     qreal img()const{return b;}
-
 };
-
 Complex operator * (qreal x,Complex y);
-
 Complex Complex::operator*(qreal x) const{
-
     return Complex(this->a*x,this->b*x);
-
 }
-
 Complex Complex::operator*(const Complex &y) const{
-
     Complex ret(this->a*y.a-this->b*y.b,this->a*y.b+this->b*y.a);
-
     return ret;
-
 }
-
 Complex Complex::operator+(const Complex &y) const{
-
     return Complex(this->a+y.a,this->b+y.b);
-
 }
-
 Complex Complex::operator-(const Complex &y) const{
-
     return Complex(this->a-y.a,this->b-y.b);
-
 }
-
 Complex operator * (qreal x,Complex y){
-
-    return y*x;
-
+   return y*x;
 }
 
 ```

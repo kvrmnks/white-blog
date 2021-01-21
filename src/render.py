@@ -19,7 +19,7 @@ def load_file(path: str) -> str:
 
 def render_markdown(content: str) -> str:
     ret = subprocess.Popen(
-        args=['hoedown', '--all-block', '--all-span', '--all-flags'],
+        args=['./module/hoedown.exe', '--all-block', '--all-span', '--all-flags'],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         encoding='utf-8'
@@ -39,12 +39,16 @@ class Render:
                  web_template_location: str,
                  blog_template_location: str,
                  card_template_location: str,
+                 global_css_location: str,
+                 global_js_location: str,
                  web_name: str):
         self.markdown_location = markdown_location
         self.html_location = html_location
         self.web_template_location = web_template_location
         self.blog_template_location = blog_template_location
         self.card_template_location = card_template_location
+        self.global_js_location = global_js_location
+        self.global_css_location = global_css_location
         self.blog_list = []
 
         if not os.path.exists(html_location):
@@ -216,15 +220,16 @@ class Render:
     def interpret_blog_page(self):
         # 由于需要每个blog的具体地址，需要先构建文件再构造链接
         # 生成blog界面的各个链接
+        self.blog_list.reverse()
         blog_file = open(self.html_location + '/blog.html', 'w', encoding='utf-8')
         blog_file.write(self.render_card())
         blog_file.close()
 
     def build_js_and_css(self):
-        copy_file('./global.js', self.html_location + '/global.js')
-        copy_file('./global.css', self.html_location + '/global.css')
+        copy_file(self.global_js_location, self.html_location + '/global.js')
+        copy_file(self.global_css_location, self.html_location + '/global.css')
 
     def build(self):
         self.build_js_and_css()
-        self.build_next_layer(self.markdown_location, self.html_location, './', 0, '')
+        self.build_next_layer(self.markdown_location, self.html_location, '.', 0, '')
         self.interpret_blog_page()
