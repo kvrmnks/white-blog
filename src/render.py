@@ -220,6 +220,7 @@ class Render:
     def interpret_blog_page(self):
         # 由于需要每个blog的具体地址，需要先构建文件再构造链接
         # 生成blog界面的各个链接
+        self.blog_list.sort(key=lambda x: x['date'])
         self.blog_list.reverse()
         blog_file = open(self.html_location + '/blog.html', 'w', encoding='utf-8')
         blog_file.write(self.render_card())
