@@ -94,15 +94,15 @@
     <script src="<!-- global-js -->"></script>
   <script>
     $('document').ready(function () {
-      var $grid = $('.row').packery({
+      let $grid = $('.row').packery({
         itemSelector: '.col-sm-4',
         isAnimated: true,
         columnWidth: 0
       });
 
-      $grid.find('.col-sm-4').each( function( i, gridItem ) {
-        var draggie = new Draggabilly( gridItem );
-        $grid.packery( 'bindDraggabillyEvents', draggie );
+      $grid.find('.col-sm-4').each(function(i, gridItem) {
+        let draggie = new Draggabilly(gridItem);
+        $grid.packery('bindDraggabillyEvents', draggie);
       });
     });
   </script>
