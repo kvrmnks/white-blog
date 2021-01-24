@@ -14,7 +14,6 @@
           href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/androidstudio.min.css">
     <link rel="stylesheet"
           href="<!-- global-css -->">
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <!--    <link rel="stylesheet" href="/web_template_css.css">-->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async
@@ -27,6 +26,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="https://unpkg.com/packery@2/dist/packery.pkgd.min.js"></script>
+    <script src="https://unpkg.com/draggabilly@2/dist/draggabilly.pkgd.min.js"></script>
     <style>
       img{
         display: block;
@@ -92,10 +94,15 @@
     <script src="<!-- global-js -->"></script>
   <script>
     $('document').ready(function () {
-      let msnry = new Masonry('.row', {
+      var $grid = $('.row').packery({
         itemSelector: '.col-sm-4',
-        columnWidth: 0,
         isAnimated: true,
+        columnWidth: 0
+      });
+
+      $grid.find('.col-sm-4').each( function( i, gridItem ) {
+        var draggie = new Draggabilly( gridItem );
+        $grid.packery( 'bindDraggabillyEvents', draggie );
       });
     });
   </script>
