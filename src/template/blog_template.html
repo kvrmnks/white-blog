@@ -61,7 +61,9 @@
     <div class='container'>
       <div class="row">
       <!-- <content> -->
-        </div>
+      </div>
+      <button class="btn btn-primary" id='pre' style="float: left; text-align: left">上一页</button>
+      <button class="btn btn-primary" id='next' style="float: right; text-align: right">下一页</button>
     </div>
 
         <!-- The Modal -->
@@ -86,25 +88,83 @@
     <script>
       hljs.initHighlightingOnLoad()
     </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.5.0/highlightjs-line-numbers.min.js"></script>
-  <script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.5.0/highlightjs-line-numbers.min.js"></script>
+    <script>
       hljs.initHighlightingOnLoad();
       hljs.initLineNumbersOnLoad();
-  </script>
-    <script src="<!-- global-js -->"></script>
-  <script>
-    $('document').ready(function () {
-      let $grid = $('.row').packery({
-        itemSelector: '.col-sm-4',
-        isAnimated: true,
-        columnWidth: 0
-      });
+    </script>
 
-      $grid.find('.col-sm-4').each(function(i, gridItem) {
-        let draggie = new Draggabilly(gridItem);
-        $grid.packery('bindDraggabillyEvents', draggie);
+    <script src="<!-- global-js -->"></script>
+
+    <script>
+      $('document').ready(function () {
+        let $grid = $('.row').packery({
+          itemSelector: '.col-sm-4',
+          isAnimated: true,
+          columnWidth: 0
+        });
+
+        $grid.find('.col-sm-4').each(function(i, gridItem) {
+          let draggie = new Draggabilly(gridItem);
+          $grid.packery('bindDraggabillyEvents', draggie);
+        });
       });
-    });
-  </script>
+    </script>
+
+  <script>
+      const card_per_page = 20;
+      const reg = /\d{4,4}\.\d{2,2}\.\d{2,2}/;
+      function getUrlParam(name) {
+          let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+          let r = window.location.search.substr(1).match(reg);
+          if (r != null) return unescape(r[2]); return null;
+      }
+      function min(number, length) {
+        return number < length ? number : length;
+      }
+      function sortByDate(x, y){
+        return reg.exec(x) < reg.exec(y);
+      }
+
+      let param = getUrlParam('page');
+      if(param === null){
+        param = 0;
+      }
+      card_list = document.getElementsByClassName('blog-card');
+      let raw_length = card_list.length;
+      console.log(typeof card_list);
+      card_list = Array.from(card_list);
+      card_list.sort(sortByDate)
+
+
+      console.log(card_list.length);
+      let range_l = 0;
+      for(let i=0;i<param;i++) range_l += card_per_page;
+
+      for(let i=range_l + card_per_page;i<min(range_l + 2*card_per_page, raw_length);i++){
+        console.log(card_list[i].innerHTML);
+        card_list[i].remove();
+        // pos.parentNode.removeChild(pos);
+      }
+
+      for(let i=0;i<min(range_l, card_list.length);i++){
+        console.log(card_list[i].innerHTML);
+        card_list[i].remove();
+      }
+      $("#pre").on("click", function (){
+        let cur = getUrlParam('page');
+        if(cur === null)cur = 0;
+        cur -= 1;
+        cur = -min(-cur, 0);
+        $(location).attr("href", "./blog.html?page="  + cur);
+      });
+      $("#next").on("click", function (){
+        let cur = getUrlParam('page');
+        if(cur === null)cur = 0;
+        cur += 1;
+        cur = min(cur, Math.floor(raw_length/card_per_page) );
+        $(location).attr("href", "./blog.html?page="  + cur);
+      });
+    </script>
   </body>
 </html>

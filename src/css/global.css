@@ -90,14 +90,14 @@ img:hover {opacity: 0.7;}
   text-align: center;
 }
 
-.col-sm-4{
+.blog-card{
   border-radius: 5px;
   padding: 8px;
 }
 
-.col-sm-4.is-dragging,
+.blog-card.is-dragging,
   /* Packery adds class while transitioning to drop position */
-.col-sm-4.is-positioning-post-drag {
+.blog-card.is-positioning-post-drag {
   background: #EA0;
   z-index: 2; /* keep dragged item on top */
 }
