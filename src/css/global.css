@@ -89,3 +89,15 @@ img:hover {opacity: 0.7;}
   padding-bottom: 50px;
   text-align: center;
 }
+
+.col-sm-4{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.col-sm-4.is-dragging,
+  /* Packery adds class while transitioning to drop position */
+.col-sm-4.is-positioning-post-drag {
+  background: #EA0;
+  z-index: 2; /* keep dragged item on top */
+}
