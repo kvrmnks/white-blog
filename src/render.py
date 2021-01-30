@@ -34,16 +34,19 @@ def render_markdown(content: str) -> str:
 
 
 class Render:
-    def __init__(self, markdown_location: str,
-                 html_location: str,
+    def __init__(self, config: dict,
                  web_template_location: str,
                  blog_template_location: str,
                  card_template_location: str,
                  global_css_location: str,
                  global_js_location: str,
-                 web_name: str):
-        self.markdown_location = markdown_location
-        self.html_location = html_location
+                 ):
+
+        self.blog_location = config['blog_location']
+        self.draft_location = config['draft_location']
+        self.html_location = config['output_location']
+        self.draft_html_location = self.html_location+'/draft'
+        self.web_name = config['web_name']
         self.web_template_location = web_template_location
         self.blog_template_location = blog_template_location
         self.card_template_location = card_template_location
@@ -51,8 +54,11 @@ class Render:
         self.global_css_location = global_css_location
         self.blog_list = []
 
-        if not os.path.exists(html_location):
-            os.makedirs(html_location)
+        if not os.path.exists(self.html_location):
+            os.makedirs(self.html_location)
+
+        if not os.path.exists(self.draft_html_location):
+            os.makedirs(self.draft_html_location)
 
         # 加载模板
         self.web_template = load_file(self.web_template_location)
@@ -79,8 +85,8 @@ class Render:
         self.global_css = '<!-- global-css -->'
         self.global_js = '<!-- global-js -->'
 
-        self.web_template = self.web_template.replace(self.web_name_cattle, web_name)
-        self.blog_template = self.blog_template.replace(self.web_name_cattle, web_name)
+        self.web_template = self.web_template.replace(self.web_name_cattle, self.web_name)
+        self.blog_template = self.blog_template.replace(self.web_name_cattle, self.web_name)
 
     def render_web_page(self, title: str, content: str, depth: int) -> str:
         ret = self.web_template.replace(self.web_title_cattle, title, 1)
@@ -130,7 +136,8 @@ class Render:
                         html_path_layer: str,
                         partial_location: str,
                         depth: int,
-                        date: str):
+                        date: str,
+                        add_into_blog_list: bool):
 
         # markdown_path_layer 正在解析的地址
         # html_path_layer 正在生成的地址
@@ -149,7 +156,7 @@ class Render:
             cur_markdown_filename = markdown_path_layer + '/' + i
             cur_html_filename = html_path_layer + '/' + i.replace('.md', '.html')
             self.interpret_web_page(cur_markdown_filename, cur_html_filename, i.replace('.md', ''), depth)
-            if depth != 0:
+            if depth != 0 and add_into_blog_list:
                 self.blog_list.append({
                     'title': i.replace('.md', ''),
                     'path': partial_location + '/' + i.replace('.md', '.html'),
@@ -168,13 +175,19 @@ class Render:
                          html_path_layer: str,
                          partial_location: str,
                          depth: int,
-                         date: str):
+                         date: str,
+                         add_into_blog_list: bool):
         # markdown_path_layer 正在解析的地址
         # html_path_layer 正在生成的地址
         # partial_location 相对位置
         # depth 相对位置中的层数
         # date 用于生成blog的时间
-        self.build_one_layer(markdown_path_layer, html_path_layer, partial_location, depth, date)
+        self.build_one_layer(markdown_path_layer,
+                             html_path_layer,
+                             partial_location,
+                             depth,
+                             date,
+                             add_into_blog_list)
         dir_list = os.listdir(markdown_path_layer)
         dir_list = [i for i in dir_list if os.path.isdir(markdown_path_layer + '/' + i)]
         for i in dir_list:
@@ -189,7 +202,8 @@ class Render:
                                   cur_html_layer_name,
                                   partial_location + '/' + i,
                                   depth + 1,
-                                  cur_data)
+                                  cur_data,
+                                  add_into_blog_list)
 
     def render_card(self) -> str:
         # 生成关于卡片的html
@@ -232,5 +246,8 @@ class Render:
 
     def build(self):
         self.build_js_and_css()
-        self.build_next_layer(self.markdown_location, self.html_location, '.', 0, '')
+        for x in self.blog_location:
+            self.build_next_layer(x, self.html_location, '.', 0, '', True)
+        for x in self.draft_location:
+            self.build_next_layer(x, self.draft_html_location, '//', 1, '', False)
         self.interpret_blog_page()

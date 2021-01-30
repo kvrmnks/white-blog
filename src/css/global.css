@@ -98,6 +98,6 @@ img:hover {opacity: 0.7;}
 .blog-card.is-dragging,
   /* Packery adds class while transitioning to drop position */
 .blog-card.is-positioning-post-drag {
-  background: #EA0;
+  background: none;
   z-index: 2; /* keep dragged item on top */
 }

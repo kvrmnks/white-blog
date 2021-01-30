@@ -1,0 +1,6 @@
+{
+    "blog_location": ["../docs"],
+    "draft_location": ["../draft"],
+    "output_location": "../site",
+    "web_name": "Kvrmnks' blog"
+}
