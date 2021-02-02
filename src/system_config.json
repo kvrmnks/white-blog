@@ -1,0 +1,35 @@
+{
+  "about_page_template": "./template/about_page_template.html",
+  "blog_page_template": "./template/blog_page_template.html",
+  "card_template": "./template/card_template.html",
+  "home_page_template": "./template/home_page_template.html",
+  "normal_page_template": "./template/normal_page_template.html",
+
+  "global_css": "./css/global.css",
+  "global_js": "./javascript/global.js",
+
+  "global_css_sh": "<!-- global-css -->",
+  "global_js_sh": "<!-- global-js -->",
+
+  "nav_about_sh": "<!-- nav-about-href -->",
+  "nav_home_sh": "<!-- nav-home-href -->",
+  "nav_blog_sh": "<!-- nav-blog-href -->",
+
+  "web_name_sh": "<!-- web-name -->",
+  "web_title_sh": "<!-- title -->",
+
+  "blog_abstract_sh": "<!-- more -->",
+  "blog_title_sh": "<!-- title -->",
+
+  "content_sh": "<!-- <content> -->",
+
+  "card_title_sh": "<!-- title -->",
+  "card_content_sh": "<!-- content -->",
+  "card_date_sh": "<!-- date -->",
+  "card_href_sh": "<!-- href -->",
+
+  "normal_page_pre_page_name_sh": "<!-- pre-page-name -->",
+  "normal_page_pre_page_href_sh": "<!-- pre-page-href -->",
+  "normal_page_next_page_name_sh": "<!-- next-page-name -->",
+  "normal_page_next_page_href_sh": "<!-- next-page-href -->"
+}
