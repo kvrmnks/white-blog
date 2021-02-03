@@ -12,15 +12,15 @@ def copy_file(raw_path: str, target_path: str):
 
 
 def load_file(path: str) -> str:
-    F = open(path, 'r', encoding='utf-8')
-    ret = F.read()
+    f = open(path, 'r', encoding='utf-8')
+    ret = f.read()
     return ret
 
 
 def save_file(path: str, content: str) -> None:
-    F = open(path, 'w', encoding='utf-8')
-    F.write(content)
-    F.close()
+    f = open(path, 'w', encoding='utf-8')
+    f.write(content)
+    f.close()
 
 
 def render_markdown(content: str) -> str:
@@ -39,6 +39,13 @@ def render_markdown(content: str) -> str:
     return out
 
 
+def get_root_path(depth: int) -> str:
+    ret = './'
+    for i in range(depth):
+        ret += '../'
+    return ret
+
+
 class Render:
     def __init__(self, user_config: dict,
                  system_config: dict
@@ -53,12 +60,6 @@ class Render:
         if not os.path.exists(self.user_config['draft_output_location']):
             os.makedirs(self.user_config['draft_output_location'])
 
-        self.system_config['about_page_template'] = load_file(self.system_config['about_page_template'])
-        self.system_config['blog_page_template'] = load_file(self.system_config['blog_page_template'])
-        self.system_config['card_template'] = load_file(self.system_config['card_template'])
-        self.system_config['home_page_template'] = load_file(self.system_config['home_page_template'])
-        self.system_config['normal_page_template'] = load_file(self.system_config['normal_page_template'])
-
         template_list = ['about_page_template',
                          'blog_page_template',
                          'card_template',
@@ -66,6 +67,7 @@ class Render:
                          'normal_page_template']
 
         for x in template_list:
+            self.system_config[x] = load_file(self.system_config[x])
             self.system_config[x] = self.system_config[x].replace(
                 self.system_config['web_name_sh'],
                 self.user_config['web_name']
@@ -73,33 +75,24 @@ class Render:
         self.blog_list = []
         self.draft_list = []
 
-    def get_jump_path(self, depth: int) -> str:
-        ret = './'
-        for i in range(depth):
-            ret += '../'
-        return ret
-
     def render_normal_page(self,
-                           title: str,
                            content: str,
-                           depth: int,
-                           next_page_name: str,
-                           next_page_href: str,
-                           pre_page_name: str,
-                           pre_page_href: str) -> str:
-        ret = self.system_config['normal_page_template'].replace(self.system_config['blog_title_sh'], title, 1)
-        ret = ret.replace(self.system_config['content_sh'], content, 1)
-        partial_str = self.get_jump_path(depth)
+                           cur_file: dict,
+                           pr_file: dict,
+                           nx_file: dict) -> str:
+        ret = self.system_config['normal_page_template'].replace(self.system_config['blog_title_sh'], cur_file['title'])
+        ret = ret.replace(self.system_config['content_sh'], content)
+        partial_str = get_root_path(cur_file['depth'])
         ret = ret.replace(self.system_config['nav_home_sh'], partial_str + 'index.html')
         ret = ret.replace(self.system_config['nav_blog_sh'], partial_str + 'blog.html')
         ret = ret.replace(self.system_config['nav_about_sh'], partial_str + 'about.html')
         ret = ret.replace(self.system_config['global_css_sh'], partial_str + 'global.css')
         ret = ret.replace(self.system_config['global_js_sh'], partial_str + 'global.js')
-        ret = ret.replace(self.system_config['normal_page_pre_page_name_sh'], next_page_name)
-        ret = ret.replace(self.system_config['normal_page_pre_page_href_sh'], next_page_href)
-        ret = ret.replace(self.system_config['normal_page_next_page_name_sh'], pre_page_name)
-        ret = ret.replace(self.system_config['normal_page_next_page_href_sh'], pre_page_href)
-
+        ret = ret.replace(self.system_config['normal_page_pre_page_name_sh'], pr_file['title'])
+        ret = ret.replace(self.system_config['normal_page_pre_page_href_sh'], partial_str + pr_file['partial_path'])
+        ret = ret.replace(self.system_config['normal_page_next_page_name_sh'], nx_file['title'])
+        ret = ret.replace(self.system_config['normal_page_next_page_href_sh'], partial_str + nx_file['partial_path'])
+        ret = ret.replace(self.system_config['favicon_href_sh'], partial_str + 'favicon.ico')
         return ret
 
     def render_abstract(self, markdown_path: str) -> str:
@@ -109,25 +102,14 @@ class Render:
         return render_markdown(out_string)
 
     def interpret_normal_page(self,
-                              markdown_path: str,
-                              html_path: str,
-                              title: str,
-                              depth: int,
-                              next_page_name: str,
-                              next_page_href: str,
-                              pre_page_name: str,
-                              pre_page_href: str):
-        out_string = render_markdown(self.load_without_abstract_of_file(markdown_path))
-        f_out = open(html_path, 'w', encoding='utf-8')
-        f_out.write(self.render_normal_page(title,
-                                            out_string,
-                                            depth,
-                                            next_page_name,
-                                            next_page_href,
-                                            pre_page_name,
-                                            pre_page_href))
+                              cur_file: dict,
+                              pr_file: dict,
+                              nx_file: dict):
+        out_string = render_markdown(self.load_without_abstract_of_file(cur_file['file_path']))
+        f_out = open(cur_file['out_partial_path'], 'w', encoding='utf-8')
+        f_out.write(self.render_normal_page(out_string, cur_file, pr_file, nx_file))
         f_out.close()
-        print('finish render ' + markdown_path + ' to ' + html_path)
+        print('finish render ' + cur_file['file_path'] + ' to ' + cur_file['partial_path'])
 
     def load_abstract_of_file(self, path: str) -> str:
         # 加载文件的摘要部分
@@ -179,7 +161,7 @@ class Render:
         self.blog_list.sort(key=lambda x: x['date'])
         self.blog_list.reverse()
         blog_file = open(self.user_config['output_location'] + '/blog.html', 'w', encoding='utf-8')
-        blog_file.write(self.render_card())
+        blog_file.write(self.render_card().replace(self.system_config['favicon_href_sh'], './favicon.ico'))
         blog_file.close()
 
     def build_js_and_css(self):
@@ -204,6 +186,15 @@ class Render:
 
         home_page = home_page.replace(self.system_config['web_title_sh'], 'Home')
         about_page = about_page.replace(self.system_config['web_title_sh'], 'About')
+
+        home_page = home_page.replace(self.system_config['global_js_sh'], './global.js')
+        home_page = home_page.replace(self.system_config['global_css_sh'], './global.css')
+
+        about_page = about_page.replace(self.system_config['global_js_sh'], './global.js')
+        about_page = about_page.replace(self.system_config['global_css_sh'], './global.css')
+
+        home_page = home_page.replace(self.system_config['favicon_href_sh'], './favicon.ico')
+        about_page = about_page.replace(self.system_config['favicon_href_sh'], './favicon.ico')
 
         save_file(self.user_config['output_location'] + './index.html', home_page)
         save_file(self.user_config['output_location'] + './about.html', about_page)
@@ -233,6 +224,7 @@ class Render:
                 'file_path': path + '/' + x,
                 'file_parent_path': path,
                 'partial_parent_path': partial_parent_path,
+                'partial_path': partial_parent_path + '/' + x.replace('.md', '.html'),
                 'date': date,
                 'depth': depth
             })
@@ -240,11 +232,22 @@ class Render:
     def search_all_blog(self):
         for x in self.user_config['blog_location']:
             self.search_markdown(self.blog_list, 1, '.', '', x)
+        length = len(self.blog_list)
+        for x in range(length):
+            df = self.user_config['output_location'] + '/'
+            self.blog_list[x]['out_partial_parent_path'] = df + self.blog_list[x]['partial_parent_path']
+            self.blog_list[x]['out_partial_path'] = df + self.blog_list[x]['partial_path']
         print(self.blog_list)
 
     def search_all_draft(self):
         for x in self.user_config['draft_location']:
             self.search_markdown(self.draft_list, 1, '.', '', x)
+        length = len(self.draft_list)
+        for x in range(length):
+            self.draft_list[x]['depth'] += 1
+            df = self.user_config['draft_output_location'] + '/'
+            self.draft_list[x]['out_partial_parent_path'] = df + self.draft_list[x]['partial_parent_path']
+            self.draft_list[x]['out_partial_path'] = df + self.draft_list[x]['partial_path']
         print(self.draft_list)
 
     def build_all_blog(self):
@@ -275,60 +278,24 @@ class Render:
             for y in files:
                 copy_file(x['file_parent_path'] + '/' + y, output_str + '/' + y)
 
-    def render_all_blog(self):
-        length = len(self.blog_list)
+    def render_list(self, d: list):
+        length = len(d)
         for x in range(length):
-            nx_file = self.blog_list[(x + 1) % length]
-            pr_file = self.blog_list[(x - 1 + length) % length]
-            cur_file = self.blog_list[x]
+            nx_file = d[(x + 1) % length]
+            pr_file = d[(x - 1 + length) % length]
+            cur_file = d[x]
+            self.interpret_normal_page(cur_file, pr_file, nx_file)
 
-            nx_href = self.get_jump_path(nx_file['depth']) + nx_file['partial_parent_path'] + '/' + nx_file[
-                'title'] + '.html'
-            pr_href = self.get_jump_path(pr_file['depth']) + pr_file['partial_parent_path'] + '/' + pr_file[
-                'title'] + '.html'
-
-            input_str = cur_file['file_path']
-            output_str = self.user_config['output_location'] + '/' + \
-                         cur_file['partial_parent_path'] + '/' + cur_file['title'] + '.html'
-
-            self.interpret_normal_page(input_str,
-                                       output_str,
-                                       cur_file['title'],
-                                       int(cur_file['depth']),
-                                       nx_file['title'],
-                                       nx_href,
-                                       pr_file['title'],
-                                       pr_href)
+    def render_all_blog(self):
+        self.render_list(self.blog_list)
 
     def render_all_draft(self):
-        length = len(self.draft_list)
-        for x in range(length):
-            nx_file = self.draft_list[(x + 1) % length]
-            pr_file = self.draft_list[(x - 1 + length) % length]
-            cur_file = self.draft_list[x]
-
-            nx_href = self.get_jump_path(nx_file['depth']) + nx_file['partial_parent_path'] + '/' + nx_file[
-                'title'] + '.html'
-            pr_href = self.get_jump_path(pr_file['depth']) + pr_file['partial_parent_path'] + '/' + pr_file[
-                'title'] + '.html'
-
-            input_str = cur_file['file_path']
-            output_str = self.user_config['draft_output_location'] + '/' + \
-                         cur_file['partial_parent_path'] + '/' + cur_file['title'] + '.html'
-
-            self.interpret_normal_page(input_str,
-                                       output_str,
-                                       cur_file['title'],
-                                       int(cur_file['depth']),
-                                       nx_file['title'],
-                                       nx_href,
-                                       pr_file['title'],
-                                       pr_href)
+        self.render_list(self.draft_list)
 
     def build(self):
+        self.build_favicon()
         self.build_js_and_css()
         self.build_about_and_home_page()
-
 
         self.search_all_blog()
         self.search_all_draft()
@@ -338,3 +305,5 @@ class Render:
         self.build_all_blog()
         self.build_all_draft()
 
+    def build_favicon(self):
+        copy_file(self.system_config['favicon_location'], self.user_config['output_location'] + '/favicon.ico')

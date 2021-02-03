@@ -1,6 +1,6 @@
 {
     "blog_location": ["../B/blog"],
-    "draft_location": [],
+    "draft_location": ["../B/draft"],
     "home_page_location": "../B/index.md",
     "about_page_location": "../B/about.md",
     "output_location": "../docs",

@@ -4,6 +4,7 @@
   "card_template": "./template/card_template.html",
   "home_page_template": "./template/home_page_template.html",
   "normal_page_template": "./template/normal_page_template.html",
+  "favicon_location": "./favicon.ico",
 
   "global_css": "./css/global.css",
   "global_js": "./javascript/global.js",
@@ -28,8 +29,11 @@
   "card_date_sh": "<!-- date -->",
   "card_href_sh": "<!-- href -->",
 
+  "favicon_href_sh": "<!-- favicon-href -->",
+
   "normal_page_pre_page_name_sh": "<!-- pre-page-name -->",
   "normal_page_pre_page_href_sh": "<!-- pre-page-href -->",
   "normal_page_next_page_name_sh": "<!-- next-page-name -->",
   "normal_page_next_page_href_sh": "<!-- next-page-href -->"
+
 }
