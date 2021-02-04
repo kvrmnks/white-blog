@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"> <meta name="viewport" content="width=device-width">
+    <title>NP-Complete问题乱证</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
+    	<link rel="icon" href="./../../../../../favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="./../../../../../favicon.ico" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/androidstudio.min.css">
+    <link rel="stylesheet"
+          href="./../../../../../global.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Kvrmnks' blog</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item ">
+              <a class="nav-link" href="./../../../../../index.html">Home </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="./../../../../../blog.html">Blog</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./../../../../../about.html">About</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+
+
+    <div class='container'>
+      <h3>NP-Complete问题乱证</h3>
+
+<h4>最长通路问题(longest path)</h4>
+
+<h5>实例</h5>
+
+<p>图\(G=&lt;V,E&gt;\)，是否存在一条长度至少为\(K\)的路</p>
+
+<h5>证明</h5>
+
+<p>令\(K = |V|\)于是问题变成了Hamilton 通路问题，证毕。</p>
+
+<h4>集合包装问题</h4>
+
+<h5>实例</h5>
+
+<p>令某个集合\(|S| &lt; \infty\), \(C \subset 2^{S}\)，\(n = |C|\)，询问是否存在\(C\)中的\(k\)个元素，使得任意两个互不交叉</p>
+
+<h5>证明</h5>
+
+<p>这个问题显然是团问题...</p>
+
+<h4>哈密尔顿子图划分(partition into Hamilton subgraph)</h4>
+
+<h5>实例</h5>
+
+<p>图\(G\)，能否被划分成\(k\)个互补相交的集合使得每个导出子图包含一个哈密尔顿回路</p>
+
+<h5>证明</h5>
+
+<p>令\(k=1\)问题变成Hamilton 回路问题</p>
+
+<h4>最大公共子图问题(largest common subgraph)</h4>
+
+<h5>实例</h5>
+
+<p>给两张图\(G_{1}\)，\(G_{2}\)，求两个最大的子图同构</p>
+
+<h5>证明</h5>
+
+<p>令第二张图为大小为\(k\)的完全图，整个问题变成了团问题。</p>
+
+<h4>最小平方和问题(minimum sum of squares)</h4>
+
+<h5>实例</h5>
+
+<p>有限集合\(A\) ，每个元素\(a \in A\)，每个元素均有一个值\(f: A \rightarrow R\)</p>
+
+<p>将集合\(A\)分成\(K\)个互补相交的集合，使得每个子集的平方和的和小于等于\(J\)</p>
+
+<h5>证明</h5>
+
+<p>对于这个划分问题，考虑用二划分问题向这个方向来检测</p>
+
+<p>考虑平方增长的速度比线性快得多，直接复制n份，然后规约二划分</p>
+
+<p>这里不是很严谨，下次一定</p>
+
+<h4>返回顶点集(feedback vertex set)</h4>
+
+<h5>实例</h5>
+
+<p>有向图\(G=&lt;V,A&gt;\)，正整数\(K \leq |V|\)</p>
+
+<p>询问是否存在\(V&#39;\subset V\)，\(|V&#39;|\leq K\)，且\(G\)的每一条有向回路至少包含\(V&#39;\)的一个点</p>
+
+<h5>证明</h5>
+
+<p>这很显然是个击中集问题。</p>
+
+<h4>四元素集合的严格覆盖(exact cover by 4-sets)</h4>
+
+<h5>实例</h5>
+
+<p>即X3C问题直接扩展成4的形式</p>
+
+<h5>证明</h5>
+
+<p>考虑将X3C问题归约到X4C问题</p>
+
+<p>对于每个X3C中的第\(i\)个集合\((a,b,c)\) ，直接扩展成\((a,b,c,d_{i})\)</p>
+
+<p>这样会多出\(n\)个分量，为了保证多出的\(n\)个分量，直接添加\(C_{n}^{4}\)个元素，来保证全部被覆盖</p>
+
+<p>当然这样还是有问题的，即不一定能整除，直接补全就好了</p>
+
+<h4>支配集问题(dominating set)</h4>
+
+<h5>实例</h5>
+
+<p>无向图\(G=&lt;V,E&gt;\)，\(K \leq |V|, K\in N^{+}\)</p>
+
+<p>询问是否存在\(V&#39;\subset V\)，st\(|V&#39;|\leq K\)，且\(\forall v\in V/V&#39;,st,\exists u\in V&#39;,uv\in E\)</p>
+
+<h5>证明</h5>
+
+<p>被我xjb画画出来了。</p>
+
+<p>这个东西显然和点覆盖问题很像。</p>
+
+<p>于是考虑用点覆盖问题规约到这个问题。</p>
+
+<p>假设一个点覆盖的实例是\(G&#39;=&lt;V&#39;,E&#39;&gt;\)</p>
+
+<p>构造一个新的图\(G&#39;&#39;=&lt;V&#39;&#39;,E&#39;&#39;&gt;\)</p>
+
+<p>其中对于\(E&#39;\)中的每条边\(uv\)，**增量构造**一个新的点\(d_{i}\)，**增量构造**两条边\(ud_{i},vd_{i}\)</p>
+
+<p>这个问题就变成了一个支配集问题。</p>
+
+<p>来一张图看看。</p>
+
+<p>基础点覆盖问题</p>
+
+<p><img src="./image-20210125090750977.png" alt="image-20210125090750977" style="zoom: 33%;" /></p>
+
+<p>新构造3个点4，5，6，转化成一个支配集的问题</p>
+
+<p><img src="./image-20210125090844936.png" alt="image-20210125090844936" style="zoom: 33%;" /></p>
+
+<h4>图3染色问题(graph 3-colorability)</h4>
+
+<h5>实例</h5>
+
+<p>世人皆知</p>
+
+<h5>证明</h5>
+
+<p>爆智力*1</p>
+
+<p>首先这个问题看起来就很3SAT，于是尝试从3SAT规约到这个问题。首先比较好想的一个部分就是</p>
+
+<p>假设分别染成1，2，3这3种颜色，那么可以构造一个\(K_{3}\)，来指示真假。</p>
+
+<p>然后就很困难了/youl</p>
+
+<p>我在找了一发资料之后发现了下面这总构造方式，可以产生PQ的或\(P\bigcup Q\)</p>
+
+<p>于是就很简单了...</p>
+
+<p>至于怎么想出来的我还是不知道，我似乎对图论知识并不很敏感的样子...</p>
+
+<p><img src="image-20210124214445870.png" alt="image-20210124214445870" style="zoom:33%;" /></p>
+
+<h4>划分为长度为2的通路（partition into paths of length 2）</h4>
+
+<h5>实例</h5>
+
+<p>图\(G=&lt;V,E&gt;\)，\(|V|=3q\)</p>
+
+<p>询问是否存在一个\(V\)的划分，使得每个互补相交的子集\(V_{i}=\{v_{1},v_{2},v_{3}\}\)</p>
+
+<p>其点导出子图，存在一条长度为2的路。</p>
+
+<h5>证明</h5>
+
+<p>考虑通过X3C问题规约到这个问题</p>
+
+<p>假设有一个X3C的问题实例\((a_{i},b_{i},c_{i})\)</p>
+
+<p>构造\(3q\)个点，然后连边\((a_{i},b_{i}),(b_{i},c_{i})\)</p>
+
+<p>这样每次一个划分，就代表了选择了X3C问题中的一个元素。</p>
+
+<h4>k-median</h4>
+
+<h5>实例</h5>
+
+<p>世人皆知</p>
+
+<h5>证明</h5>
+
+<p>考虑通过支配集问题归约到这个问题。</p>
+
+<p>对于支配集问题的图\(G=&lt;V,E&gt;\)</p>
+
+<p>将\(V\)中顶点复制一份作为工厂，每个点向自己和关联点连\(d=0\)的边。</p>
+
+<p>然后就做完了/youl</p>
+
+<h4>Steiner tree</h4>
+
+<h5>实例</h5>
+
+<p>世人皆知</p>
+
+<h5>证明</h5>
+
+<p>被爆智力*3，被爆到不想写证明了</p>
+
+<p><a href="http://profs.sci.univr.it/%7Errizzi/classes/Complexity/provette/Santuari/steiner.pdf">http://profs.sci.univr.it/~rrizzi/classes/Complexity/provette/Santuari/steiner.pdf</a></p>
+
+<h4>集合分裂问题（set splitting）</h4>
+
+<h5>实例</h5>
+
+<p>一个有限集\(S\)，\(C \subset 2^{S}\)</p>
+
+<p>询问是否存在一个\(S\)的划分\(S_{1},S_{2}\)，使得\(\forall x \in C, x \not\subset S_{1},x\not\subset S_{2}\)</p>
+
+<h5>证明</h5>
+
+<p>被爆智力*2</p>
+
+<p><img src="./image-20210125172252680.png" alt="image-20210125172252680" style="zoom: 33%;" /></p>
+
+<p>这个东西真的好靠直觉呀/youl，给个提示就好想了。</p>
+
+<p>考虑使用3SAT归约到这个问题，下面来着手构造\(C\)</p>
+
+<p>对于\((a_{i},b_{i},c_{i})\)来说，构造\((a_{i},\overline a_{i}),(b_{i},\overline b_{i}),(c_{i},\overline c_{i})\)</p>
+
+<p>以及\((d, \overline a_{i}, \overline b_{i}, \overline c_{i})\)</p>
+
+<p>假设这个集合分裂问题得到了一个解，将\(d\)所在的集合的变量全设为真，其余全设为假。</p>
+
+      <a class="alert-link" style="float: left; text-align: left" href="./../../../../.././2021/01/23/NP-Complete问题乱证/NP-Complete问题乱证.html">上一篇：NP-Complete问题乱证</a>
+      <a class="alert-link" style="float: right; text-align: right" href="./../../../../.././2021/01/23/NP-Complete问题乱证/NP-Complete问题乱证.html">下一篇：NP-Complete问题乱证</a>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- The Close Button -->
+      <span class="close">&times;</span>
+
+      <!-- Modal Content (The Image) -->
+      <div style="display: flex; height: 100%;">
+        <img class="modal-content" id="img01">
+      </div>
+
+    </div>
+
+    <footer class="footer navbar-fixed-bottom ">
+      <div class="container">
+        Powered by <a href="https://github.com/kvrmnks/white-blog">White-blog</a>
+      </div>
+    </footer>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+    </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.5.0/highlightjs-line-numbers.min.js"></script>
+  <script>
+      hljs.initHighlightingOnLoad();
+      hljs.initLineNumbersOnLoad();
+  </script>
+  <script src="./../../../../../global.js"></script>
+  </body>
+</html>

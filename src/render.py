@@ -3,12 +3,19 @@ import subprocess
 
 
 def copy_file(raw_path: str, target_path: str):
-    raw_file = open(raw_path, 'rb')
-    target_file = open(target_path, 'wb')
-    content = raw_file.read()
-    target_file.write(content)
-    raw_file.close()
-    target_file.close()
+    if os.path.isdir(raw_path):
+        if not os.path.exists(target_path):
+            os.makedirs(target_path)
+            dl = os.listdir(raw_path)
+            for x in dl:
+                copy_file(raw_path+'/'+x, target_path+'/'+x)
+    else:
+        raw_file = open(raw_path, 'rb')
+        target_file = open(target_path, 'wb')
+        content = raw_file.read()
+        target_file.write(content)
+        raw_file.close()
+        target_file.close()
 
 
 def load_file(path: str) -> str:
@@ -237,7 +244,7 @@ class Render:
             df = self.user_config['output_location'] + '/'
             self.blog_list[x]['out_partial_parent_path'] = df + self.blog_list[x]['partial_parent_path']
             self.blog_list[x]['out_partial_path'] = df + self.blog_list[x]['partial_path']
-        print(self.blog_list)
+        # print(self.blog_list)
 
     def search_all_draft(self):
         for x in self.user_config['draft_location']:
@@ -246,9 +253,11 @@ class Render:
         for x in range(length):
             self.draft_list[x]['depth'] += 1
             df = self.user_config['draft_output_location'] + '/'
+
             self.draft_list[x]['out_partial_parent_path'] = df + self.draft_list[x]['partial_parent_path']
             self.draft_list[x]['out_partial_path'] = df + self.draft_list[x]['partial_path']
-        print(self.draft_list)
+            self.draft_list[x]['partial_path'] = './draft/' + self.draft_list[x]['partial_path']
+        # print(self.draft_list)
 
     def build_all_blog(self):
         self.move_all_blog_file()
@@ -261,7 +270,8 @@ class Render:
     def move_all_blog_file(self):
         for x in self.blog_list:
             files = os.listdir(x['file_parent_path'])
-            files = [i for i in files if not i.endswith('.md')]
+            files = [i for i in files if (not i.endswith('.md'))]
+            # print(files)
             output_str = self.user_config['output_location'] + '/' + x['partial_parent_path']
             if not os.path.exists(output_str):
                 os.makedirs(output_str)
@@ -304,6 +314,7 @@ class Render:
 
         self.build_all_blog()
         self.build_all_draft()
+        # print(self.draft_list)
 
     def build_favicon(self):
         copy_file(self.system_config['favicon_location'], self.user_config['output_location'] + '/favicon.ico')

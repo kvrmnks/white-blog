@@ -1,8 +1,8 @@
-### White-Blog
+## White-Blog
 
-起名收到white-album的启发（
+起名收到white-album的启发<img src="readme.assets/image-20210204154905120.png" alt="image-20210204154905120" height=60 />
 
-#### 简介
+### 简介
 
 由于我受够了每次配blog的繁琐过程。
 
@@ -16,7 +16,7 @@
 
 简单的展示：[demo](https://www.kvrmnks.top)
 
-#### 开发日志
+### 开发日志
 
 2021.1.12 实现简单的解析，支持递归解析，以及简单的代码栏
 
@@ -28,11 +28,24 @@
 
 2021.1.25 写了一个投机取巧的分页
 
-#### 使用教程
+2021.2.4 将常量封装至json文件中，添加多个文件夹的渲染和草稿的渲染，加入“上一篇” 与 “下一篇”链接，加了个favicon（并不知道能不能用）
 
-<img src="readme.assets/image-20210114151041166.png" alt="image-20210114151041166" width="350" height="90" />
+### 使用教程
 
-##### 文件结构
+#### 配置文件
+
+在src目录下的user_config.json
+
+<img src="readme.assets/image-20210204154255704.png" alt="image-20210204154255704" height=150 />
+
+* blog_location 中填入博客根目录 支持多个根目录
+* draf_location 中填入草稿根目录 支持多个根目录
+* home_page_location  用于生成主页的markdown文件的地址 (暂不支持主页的附属文件)
+* about_page_location 用于生成关于的markdown文件的地址 (暂不支持关于的附属文件)
+* output_location 用于输出整个网络文件的地址
+* web_name 网页的名称
+
+#### 文件结构
 
 <img src="readme.assets/image-20210121230640173.png" alt="image-20210121230640173" width="250" height="100" />
 
@@ -42,7 +55,7 @@ site是生成博客文件的文件夹，即**生成html文件的地方**
 
 src是这个工程使用的代码和其他文件
 
-###### markdown文件的结构
+##### markdown文件的结构
 
 <img src="readme.assets/image-20210121231523390.png" alt="image-20210121231523390" width=350 height=400/>
 
@@ -61,23 +74,13 @@ docs 这层下有两个文件 与 一个文件夹
 				其余属于该篇博客的文件，如音频，视频与图片等也存放于该文件夹下
 ```
 
-##### 如何运行
+#### 如何运行
 
-<img src="readme.assets/image-20210121232648239.png" alt="image-20210121232648239" height=200 />
-
-先配置main.py中的路径信息
+先配置user_config.json
 
 然后直接运行main.py
 
-<img src="readme.assets/image-20210121232934962.png" alt="image-20210121232934962" height=178/>
-
-关键在于render.Render 的前两个路径
-
-第一个表示保存markdown文件的路径
-
-第二个表示生成html的路径
-
-##### 生成的结果
+#### 生成的结果
 
 <img src="readme.assets/image-20210121233352275.png" alt="image-20210121233352275" height=300 />
 
@@ -85,9 +88,10 @@ docs 这层下有两个文件 与 一个文件夹
 
 
 
-#### todo
-1. blog目录的自动生成与摘要的自动生成 	
+### todo
 
-2. 加个比较友好图片查看方式，比如zoom.js 	完成√
-
-3. blog目录的分页 完成√
+- [ ] 加个配置器
+- [ ] 夜间模式？
+- [ ] blog目录的自动生成与摘要的自动生成 	
+- [x]  加个比较友好图片查看方式，比如zoom.js 	
+- [x] blog目录的分页

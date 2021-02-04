@@ -1,3 +1,3 @@
 ## Welcome to Kvrmnks's Blog
 
-2333333
+使用 [white-blog](https://github.com/kvrmnks/white-blog) 部署

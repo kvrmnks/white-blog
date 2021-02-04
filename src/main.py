@@ -15,4 +15,4 @@ if __name__ == '__main__':
         system_json
     )
     r.build()
-    print(r.blog_list)
+    # print(r.blog_list)
