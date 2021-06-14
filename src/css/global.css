@@ -101,3 +101,8 @@ img:hover {opacity: 0.7;}
   background: none;
   z-index: 2; /* keep dragged item on top */
 }
+
+.content-container{
+  border-style: solid;
+  border-width: 1px;
+}
